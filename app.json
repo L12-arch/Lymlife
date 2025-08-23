@@ -4,7 +4,7 @@
     "slug": "Lymlife",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/logo.png",
+    "icon": "./src/assets/logo.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "scheme": "lymlife",
@@ -14,13 +14,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lymlife"
     },
     "web": {
-      "favicon": "./assets/logo.png"
+      "favicon": "./src/assets/logo.png"
     },
     "plugins": [
       "expo-asset",
@@ -28,7 +28,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#ffffff",
-          "image": "./assets/logo.png"
+          "image": "./src/assets/logo.png"
         }
       ],
       "react-native-edge-to-edge"
