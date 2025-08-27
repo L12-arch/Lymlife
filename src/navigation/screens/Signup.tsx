@@ -1,24 +1,37 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
-import SignupStyles from "../../styles/Signup/index.styles";
-import { useNavigation } from "@react-navigation/native";
-import { signup } from "../../api/auth"; // <-- import API
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+import SignupStyles from '../../styles/Signup/index.styles';
+import { useNavigation } from '@react-navigation/native';
+import { signup } from '../../api/auth'; // <-- import API
 
 const SignupPage = () => {
-  const [emailaddress, setEmailaddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phonenumber, setPhoneNumber] = useState("");
-  const [fullName, setfullName] = useState("");
+  const [emailaddress, setEmailaddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phonenumber, setPhoneNumber] = useState('');
+  const [fullName, setfullName] = useState('');
   const navigation = useNavigation();
 
   const handleSignup = async () => {
-    if (!emailaddress || !password || !confirmPassword || !fullName || !phonenumber) {
-      Alert.alert("Error", "All fields are required");
+    if (
+      !emailaddress ||
+      !password ||
+      !confirmPassword ||
+      !fullName ||
+      !phonenumber
+    ) {
+      Alert.alert('Error', 'All fields are required');
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+      Alert.alert('Error', 'Passwords do not match');
       return;
     }
 
@@ -29,11 +42,11 @@ const SignupPage = () => {
       password,
     });
 
-    if (res.success && res.code === "registered") {
-      Alert.alert("Success", "Account created successfully");
-      navigation.navigate("Login");
+    if (res.success && res.code === 'registered') {
+      Alert.alert('Success', 'Account created successfully');
+      navigation.navigate('Login');
     } else {
-      Alert.alert("Signup Failed", res.message || "Something went wrong");
+      Alert.alert('Signup Failed', res.message || 'Something went wrong');
     }
   };
 
@@ -78,7 +91,7 @@ const SignupPage = () => {
       </TouchableOpacity>
       <View style={SignupStyles.loginRow}>
         <Text style={SignupStyles.text}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={SignupStyles.login}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -88,7 +101,10 @@ const SignupPage = () => {
         <View style={SignupStyles.hr} />
       </View>
       <TouchableOpacity style={SignupStyles.googleLoginBtn}>
-        <Image source={require("../../assets/google.png")} style={SignupStyles.google} />
+        <Image
+          source={require('../../assets/google.png')}
+          style={SignupStyles.google}
+        />
         <Text style={SignupStyles.socialText}>Signup with Google</Text>
       </TouchableOpacity>
     </View>

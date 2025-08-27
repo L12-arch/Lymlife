@@ -15,7 +15,12 @@ import { NotFound } from './screens/NotFound';
 import LoginPage from './screens/Login';
 import SignupPage from './screens/Signup';
 import HomePage from './screens/Home';
+import ForgetPasswordPage from './screens/ForgotPassword';
+import DashboardPage from './screens/Dashboard';
 
+/**
+ * Root navigation structure
+ */
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Home: {
@@ -70,6 +75,12 @@ const RootStack = createNativeStackNavigator({
         title: 'Signup',
       },
     },
+    ForgetPassword: {
+      screen: ForgetPasswordPage,
+      options: {
+        title: 'Forgot Password',
+      },
+    },
     Profile: {
       screen: Profile,
       linking: {
@@ -100,6 +111,12 @@ const RootStack = createNativeStackNavigator({
       },
       linking: {
         path: '*',
+      },
+    },
+    Dashboard: {
+      screen: DashboardPage,
+      options: {
+        title: 'Dashboard',
       },
     },
   },

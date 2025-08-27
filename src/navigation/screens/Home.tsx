@@ -14,17 +14,13 @@ export function HomePage() {
         style={homeStyles.btn}
         onPress={() => navigation.navigate('Login')} // navigate to Login
       >
-        <Text style={homeStyles.btnText}>
-          LogIn
-        </Text>
+        <Text style={homeStyles.btnText}>LogIn</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={homeStyles.btn}
         onPress={() => navigation.navigate('Signup')} // navigate to Login
       >
-        <Text style={homeStyles.btnText}>
-          Signup
-        </Text>
+        <Text style={homeStyles.btnText}>Signup</Text>
       </TouchableOpacity>
     </View>
   );

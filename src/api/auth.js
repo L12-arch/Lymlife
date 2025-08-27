@@ -1,55 +1,95 @@
-// src/api/auth.js
+// src/api/auth_fixed.js
 import axios from 'axios';
-import CryptoJs from 'crypto-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://localhost:3000/api/auth'; 
+const API_URL = 'http://10.0.2.2:8000/api/auth';
 
 // ---------- Signup ----------
 export const signup = async (userData) => {
   try {
-    const ciphertext = CryptoJs.AES.encrypt(userData.password, 'register').toString();
     const [firstName, lastName] = userData.name.split(' ');
     const userDetails = {
       email: userData.email,
       phoneNumber: userData.phoneNumber,
       firstName,
       lastName,
-      password: ciphertext,
+      password: userData.password,
     };
 
-    const res = await axios.post(`${API_URL}/signup`, userDetails);
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    const res = await axios.post(`${API_URL}/register`, userDetails);
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    console.error('Signup error:', err);
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
 
 // ---------- Login ----------
 export const login = async (userData) => {
   try {
-    const ciphertext = CryptoJs.AES.encrypt(userData.password, 'login').toString();
-    const res = await axios.post(`${API_URL}/login`, { email: userData.email, password: ciphertext });
+    const res = await axios.post(`${API_URL}/login`, {
+      email: userData.email,
+      password: userData.password,
+    });
 
-    if (res.data.token) {
-      await AsyncStorage.setItem('token', res.data.token);
+    if (res.data && res.data.code === 'loggedIn') {
+      // Store email in AsyncStorage for profile retrieval
       await AsyncStorage.setItem('id', userData.email);
+
+      // Store user data if available
+      if (res.data.user) {
+        await AsyncStorage.setItem('userData', JSON.stringify(res.data.user));
+      }
+    } else {
+      console.log('Login not successful or unexpected response format');
     }
 
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
 
 // ---------- Forgot Password ----------
 export const forgotPassword = async (email, newPassword) => {
   try {
-    const ciphertext = CryptoJs.AES.encrypt(newPassword, 'forgetPassword').toString();
-    const res = await axios.post(`${API_URL}/forgot-password`, { email, newPassword: ciphertext });
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    const res = await axios.post(`${API_URL}/forgetpassword`, {
+      email,
+      newPassword: newPassword,
+    });
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
 
@@ -57,18 +97,25 @@ export const forgotPassword = async (email, newPassword) => {
 export const resetPassword = async (oldPassword, newPassword) => {
   try {
     const email = await AsyncStorage.getItem('id');
-    const oldCiphertext = CryptoJs.AES.encrypt(oldPassword, 'resetPassword').toString();
-    const newCiphertext = CryptoJs.AES.encrypt(newPassword, 'resetPassword').toString();
-
-    const res = await axios.post(`${API_URL}/reset-password`, {
+    const res = await axios.post(`${API_URL}/resetpassword`, {
       email,
-      oldPassword: oldCiphertext,
-      newPassword: newCiphertext,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
     });
 
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
 
@@ -82,9 +129,19 @@ export const getProfile = async () => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
 
@@ -99,8 +156,18 @@ export const logout = async () => {
       await AsyncStorage.removeItem('id');
     }
 
-    return { success: true, status: res.status, code: res.data.code, data: res.data };
+    return {
+      success: true,
+      status: res.status,
+      code: res.data.code,
+      data: res.data,
+    };
   } catch (err) {
-    return { success: false, status: err.response?.status, code: err.response?.data?.code, message: err.response?.data?.message || 'Internal Error' };
+    return {
+      success: false,
+      status: err.response?.status,
+      code: err.response?.data?.code,
+      message: err.response?.data?.message || 'Internal Error',
+    };
   }
 };
