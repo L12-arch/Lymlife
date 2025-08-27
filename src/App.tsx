@@ -11,8 +11,8 @@ import SignupPage from './navigation/screens/Signup';
 import DashboardPage from './navigation/screens/Dashboard';
 import { Profile } from './navigation/screens/Profile';
 import ForgetPasswordPage from './navigation/screens/ForgotPassword';
-import { Text } from 'react-native';
 import { AuthProvider } from './context/AuthContext';
+import NewPlaylist from './navigation/screens/NewPlaylist';
 // import { RootStackParamList } from './types/naviagtion';
 
 const Stack = createNativeStackNavigator();
@@ -35,11 +35,7 @@ export function App() {
           <Stack.Screen name="Signup" component={SignupPage} />
           <Stack.Screen name="Dashboard" component={DashboardPage} />
           <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen
-            name="NotFound"
-            component={() => <Text>Not Found</Text>} // Placeholder for NotFound screen
-            options={{ title: 'Oops!' }}
-          />
+           <Stack.Screen name="NewPlaylist" component={NewPlaylist} />
           <Stack.Screen
             name="ForgetPassword"
             component={ForgetPasswordPage} // Placeholder for ForgetPassword screen

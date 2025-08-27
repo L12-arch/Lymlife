@@ -8,6 +8,8 @@ export type RootStackParamList = {
     Dashboard: NavigatorScreenParams<DashboardTabParamList>;
     Profile: undefined;
     NotFound: undefined;
+    NewPlaylist: undefined;
+    Connect: { playlistId?: string };
 };
 
 // For the bottom tab inside Dashboard

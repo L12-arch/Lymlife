@@ -7,7 +7,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
 import bell from '../assets/bell.png';
-import newspaper from '../assets/newspaper.png';
+import newspaper from '../../assets/newspaper.png';
 import { Profile } from './screens/Profile';
 import { Settings } from './screens/Settings';
 import { Updates } from './screens/Updates';
@@ -17,10 +17,9 @@ import SignupPage from './screens/Signup';
 import HomePage from './screens/Home';
 import ForgetPasswordPage from './screens/ForgotPassword';
 import DashboardPage from './screens/Dashboard';
+import NewPlaylistScreen from './screens/NewPlaylist';
+import ConnectScreen from './screens/Connect';
 
-/**
- * Root navigation structure
- */
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Home: {
@@ -117,6 +116,28 @@ const RootStack = createNativeStackNavigator({
       screen: DashboardPage,
       options: {
         title: 'Dashboard',
+      },
+    },
+    NewPlaylist: {
+      screen: NewPlaylistScreen,
+      options: {
+        title: 'New Playlist',
+        presentation: 'modal',
+      },
+    },
+    Connect: {
+      screen: ConnectScreen,
+      options: {
+        title: 'Connect to TV',
+      },
+      linking: {
+        path: 'connect/:playlistId',
+        parse: {
+          playlistId: (playlistId) => playlistId,
+        },
+        stringify: {
+          playlistId: (playlistId) => playlistId,
+        },
       },
     },
   },

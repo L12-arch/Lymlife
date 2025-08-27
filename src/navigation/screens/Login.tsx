@@ -12,6 +12,10 @@ import loginStyles from '../../styles/Login/index.styles';
 import { login } from '../../api/auth'; // Update to use auth_fixed
 import { useAuth } from '../../context/AuthContext'; // Import auth context
 
+/**
+ * 
+ * @returns 
+ */
 const LoginPage = () => {
   const [emailPhone, setEmailPhone] = useState('');
   const [password, setPassword] = useState('');

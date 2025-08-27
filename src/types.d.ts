@@ -54,3 +54,17 @@ declare global {
     interface RootParamList extends import('./types/naviagtion').RootStackParamList { }
   }
 }
+
+export type Playlist = {
+  id: string;
+  name: string;
+  images: string[]; // local URIs
+};
+
+export type Device = {
+  id: string;
+  name: string;
+  type: "Smart Tv" | "Display";
+  strength: number; // 0..100
+  online: boolean;
+};
