@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "447527240668",
+    "project_id": "lymlife002",
+    "storage_bucket": "lymlife002.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447527240668:android:1cecfe9f91064a21ed8519",
+        "android_client_info": {
+          "package_name": "com.lymlife"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu3rEx-XDLD4iecfHS6EPy8Jqyv_FGt9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
