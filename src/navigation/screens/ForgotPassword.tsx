@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../types/navigation';
 import forgetPasswordStyles from '../../styles/ForgotPassword/index.styles';
-import { forgotPassword } from '../../api/auth';
+import { requestPasswordReset } from '../../api/auth';
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleForgotPassword = async () => {
-    if (!email || !newPassword) {
-      Alert.alert('Error', 'Please enter both email and new password');
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address');
       return;
     }
 
-    if (newPassword.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters long');
-      return;
-    }
-
-    const res = await forgotPassword(email, newPassword);
+    const res = await requestPasswordReset(email);
     if (res.success) {
-      Alert.alert('Success', 'Password has been reset successfully');
-      navigation.navigate('Login');
+      Alert.alert('Success', 'OTP has been sent to your email address');
+      navigation.navigate('OtpVerification', { email }); // Navigate to OTP verification screen with email
     } else {
       Alert.alert(
         'Reset Failed',
@@ -41,18 +38,11 @@ const ForgetPasswordPage = () => {
         value={email}
         onChangeText={setEmail}
       />
-      <TextInput
-        style={forgetPasswordStyles.input}
-        placeholder="Enter new Password"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
       <TouchableOpacity
         style={forgetPasswordStyles.resetBtn}
         onPress={handleForgotPassword}
       >
-        <Text style={forgetPasswordStyles.resetText}>Reset Password</Text>
+        <Text style={forgetPasswordStyles.resetText}>Send OTP</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={forgetPasswordStyles.backToLogin}>Back to Login</Text>

@@ -6,19 +6,18 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
-import bell from '../assets/bell.png';
 import newspaper from '../../assets/newspaper.png';
 import { Profile } from './screens/Profile';
-import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
-import { NotFound } from './screens/NotFound';
 import LoginPage from './screens/Login';
 import SignupPage from './screens/Signup';
 import HomePage from './screens/Home';
 import ForgetPasswordPage from './screens/ForgotPassword';
 import DashboardPage from './screens/Dashboard';
 import NewPlaylistScreen from './screens/NewPlaylist';
-import ConnectScreen from './screens/Connect';
+import EmailSentPage from './screens/EmailSent';
+import NewPasswordPage from './screens/NewPassword';
+import OtpVerificationPage from './screens/OtpVerification';
+import Playlists from './screens/Playlists';
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -38,26 +37,29 @@ const HomeTabs = createBottomTabNavigator({
         ),
       },
     },
-    Updates: {
-      screen: Updates,
-      options: {
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={bell}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    },
   },
 });
 
 const RootStack = createNativeStackNavigator({
   screens: {
+     OtpVerification: {
+      screen: OtpVerificationPage,
+      options: {
+        title: 'Verify OTP',
+      },
+    },
+    NewPassword: {
+      screen: NewPasswordPage,
+      options: {
+        title: 'Set New Password',
+      },
+    },
+    EmailSent: {
+      screen: EmailSentPage,
+      options: {
+        title: 'Email Sent',
+      },
+    },
     HomeTabs: {
       screen: HomeTabs,
       options: {
@@ -92,26 +94,6 @@ const RootStack = createNativeStackNavigator({
         },
       },
     },
-    Settings: {
-      screen: Settings,
-      options: ({ navigation }) => ({
-        presentation: 'modal',
-        headerRight: () => (
-          <HeaderButton onPress={navigation.goBack}>
-            <Text>Close</Text>
-          </HeaderButton>
-        ),
-      }),
-    },
-    NotFound: {
-      screen: NotFound,
-      options: {
-        title: '404',
-      },
-      linking: {
-        path: '*',
-      },
-    },
     Dashboard: {
       screen: DashboardPage,
       options: {
@@ -125,19 +107,10 @@ const RootStack = createNativeStackNavigator({
         presentation: 'modal',
       },
     },
-    Connect: {
-      screen: ConnectScreen,
+     Playlists: {
+      screen: Playlists,
       options: {
-        title: 'Connect to TV',
-      },
-      linking: {
-        path: 'connect/:playlistId',
-        parse: {
-          playlistId: (playlistId) => playlistId,
-        },
-        stringify: {
-          playlistId: (playlistId) => playlistId,
-        },
+        title: 'Image Playlists',
       },
     },
   },

@@ -13,9 +13,12 @@ import { Profile } from './navigation/screens/Profile';
 import ForgetPasswordPage from './navigation/screens/ForgotPassword';
 import { AuthProvider } from './context/AuthContext';
 import NewPlaylist from './navigation/screens/NewPlaylist';
-// import { RootStackParamList } from './types/naviagtion';
+import EmailSentPage from './navigation/screens/EmailSent';
+import OtpVerificationPage from './navigation/screens/OtpVerification';
+import NewPasswordPage from './navigation/screens/NewPassword';
+import { RootStackParamList } from './types/navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 Asset.loadAsync([
   ...NavigationAssets,
@@ -36,10 +39,25 @@ export function App() {
           <Stack.Screen name="Dashboard" component={DashboardPage} />
           <Stack.Screen name="Profile" component={Profile} />
            <Stack.Screen name="NewPlaylist" component={NewPlaylist} />
+            <Stack.Screen
+            name="EmailSent"
+            component={EmailSentPage}
+            options={{ title: 'Email Sent' }}
+          />
           <Stack.Screen
             name="ForgetPassword"
             component={ForgetPasswordPage} // Placeholder for ForgetPassword screen
             options={{ title: 'Forget Password' }}
+          />
+          <Stack.Screen
+            name="OtpVerification"
+            component={OtpVerificationPage}
+            options={{ title: 'Verify OTP' }}
+          />
+          <Stack.Screen
+            name="NewPassword"
+            component={NewPasswordPage}
+            options={{ title: 'Set New Password' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

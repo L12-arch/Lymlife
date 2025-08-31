@@ -5,9 +5,13 @@ export type RootStackParamList = {
     Login: undefined;
     Signup: undefined;
     ForgetPassword: undefined;
+    OtpVerification: { email: string };
+    NewPassword: { email: string; otp: string };
+    EmailSent: undefined;
     Dashboard: NavigatorScreenParams<DashboardTabParamList>;
     Profile: undefined;
     NotFound: undefined;
+    Playlists: undefined;
     NewPlaylist: undefined;
     Connect: { playlistId?: string };
 };
