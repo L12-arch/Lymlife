@@ -1,11 +1,9 @@
-// src/api/auth.js
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = 'http://10.0.2.2:8000/api/auth';
 
-// ---------- Signup ----------
-export const signup = async (userData) => {
+export async function signup(userData) {
   try {
     const [firstName, lastName] = userData.name.split(' ');
     const userDetails = {
@@ -18,7 +16,6 @@ export const signup = async (userData) => {
 
     const res = await axios.post(`${API_URL}/register`, userDetails);
 
-    // Handle different response codes from backend
     if (res.data.code === 'existUser') {
       return {
         success: false,
@@ -36,26 +33,24 @@ export const signup = async (userData) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
-    console.error('Signup error:', err);
+  } catch (error) {
+    console.error('Signup error:', error);
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Login ----------
-export const login = async (userData) => {
+export async function login(userData) {
   try {
     const res = await axios.post(`${API_URL}/login`, {
       email: userData.email,
       password: userData.password,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'userNotFound') {
       return {
         success: false,
@@ -76,17 +71,9 @@ export const login = async (userData) => {
       };
     }
 
-    // Store user data in AsyncStorage for successful login
     if (res.data.code === 'loggedIn' && res.data.user) {
-      console.log('Storing user data in AsyncStorage...');
       await AsyncStorage.setItem('id', userData.email);
       await AsyncStorage.setItem('userData', JSON.stringify(res.data.user));
-
-      // Verify storage
-      const storedEmail = await AsyncStorage.getItem('id');
-      const storedUserData = await AsyncStorage.getItem('userData');
-      console.log('Stored Email after login:', storedEmail);
-      console.log('Stored User Data after login:', storedUserData);
     }
 
     return {
@@ -96,24 +83,22 @@ export const login = async (userData) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Request Password Reset Email ----------
-export const requestPasswordReset = async (email) => {
+export async function requestPasswordReset(email) {
   try {
     const res = await axios.post(`${API_URL}/forgetpassword`, {
       email,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'userNotFound') {
       return {
         success: false,
@@ -141,36 +126,34 @@ export const requestPasswordReset = async (email) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
-    console.error('Request Password Reset error:', err);
+  } catch (error) {
+    console.error('Request Password Reset error:', error);
     let errorMessage = 'Internal Error';
-    if (!err.response) {
-      errorMessage = 'Network Error: Please check your connection';
-    } else if (err.response.status === 500) {
-      errorMessage = 'Server Error: Please try again later';
-    } else if (err.response.status === 404) {
+    if (!error.response) {
+      errorMessage = 'Network Error';
+    } else if (error.response.status === 500) {
+      errorMessage = 'Server Error';
+    } else if (error.response.status === 404) {
       errorMessage = 'Endpoint not found';
-    } else if (err.response.data?.message) {
-      errorMessage = err.response.data.message;
+    } else if (error.response.data?.message) {
+      errorMessage = error.response.data.message;
     }
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
       message: errorMessage,
     };
   }
-};
+}
 
-// ---------- Verify OTP ----------
-export const verifyOtp = async (email, otp) => {
+export async function verifyOtp(email, otp) {
   try {
     const res = await axios.post(`${API_URL}/verify-otp`, {
       email,
       otp,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'invalidOtp') {
       return {
         success: false,
@@ -198,18 +181,17 @@ export const verifyOtp = async (email, otp) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Set New Password with OTP ----------
-export const setNewPassword = async (email, otp, newPassword) => {
+export async function setNewPassword(email, otp, newPassword) {
   try {
     const res = await axios.post(`${API_URL}/set-new-password`, {
       email,
@@ -217,7 +199,6 @@ export const setNewPassword = async (email, otp, newPassword) => {
       newPassword,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'invalidOtp') {
       return {
         success: false,
@@ -245,24 +226,22 @@ export const setNewPassword = async (email, otp, newPassword) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Resend OTP ----------
-export const resendOtp = async (email) => {
+export async function resendOtp(email) {
   try {
     const res = await axios.post(`${API_URL}/resendOtp`, {
       email,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'userNotFound') {
       return {
         success: false,
@@ -290,29 +269,21 @@ export const resendOtp = async (email) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Get Profile ----------
-export const getProfile = async () => {
+export async function getProfile() {
   try {
     const email = await AsyncStorage.getItem('id');
-
-    console.log('Profile Request - Email:', email);
-    console.log('Profile Request - URL:', `${API_URL}/${email}`);
-
     const res = await axios.get(`${API_URL}/${email}`);
 
-    console.log('Profile Response:', res.data);
-
-    // Handle different response codes from backend
     if (res.data.code === 'userNotFound') {
       return {
         success: false,
@@ -330,18 +301,17 @@ export const getProfile = async () => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Logout ----------
-export const logout = async () => {
+export async function logout() {
   try {
     const email = await AsyncStorage.getItem('id');
     const res = await axios.post(`${API_URL}/logout`, { email });
@@ -358,18 +328,17 @@ export const logout = async () => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}
 
-// ---------- Update User ----------
-export const updateUser = async (userDetails) => {
+export async function updateUser(userDetails) {
   try {
     const email = await AsyncStorage.getItem('id');
     const res = await axios.post(`${API_URL}/update`, {
@@ -377,7 +346,6 @@ export const updateUser = async (userDetails) => {
       userDetails,
     });
 
-    // Handle different response codes from backend
     if (res.data.code === 'userNotFound') {
       return {
         success: false,
@@ -395,12 +363,12 @@ export const updateUser = async (userDetails) => {
       message: res.data.message,
       data: res.data,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      status: err.response?.status,
-      code: err.response?.data?.code || 'error',
-      message: err.response?.data?.message || 'Internal Error',
+      status: error.response?.status,
+      code: error.response?.data?.code || 'error',
+      message: error.response?.data?.message || 'Internal Error',
     };
   }
-};
+}

@@ -3,20 +3,27 @@ import { View, Text, Pressable, Image } from 'react-native';
 import { colors } from '../theme';
 import uploadStyles from '../styles/UploadDrop/index.styles';
 
-const UploadDrop = ({
-  images,
-  onAdd,
-}: {
+type UploadDropProps = {
   images: string[];
   onAdd: () => void;
-}) => {
+};
+
+/**
+ * UploadDrop Component
+ * @param images Array of image URIs to display
+ * @param onAdd Function to call when adding images
+ * @returns An upload drop area that shows images in a grid if available,
+ */
+function UploadDrop({ images, onAdd }: UploadDropProps) {
   return (
     <Pressable onPress={onAdd} style={uploadStyles.wrap}>
       {images.length === 0 ? (
         <>
           <View style={uploadStyles.icon} />
           <Text style={uploadStyles.title}>Upload Images</Text>
-          <Text style={uploadStyles.sub}>Tap to add photos to your playlist</Text>
+          <Text style={uploadStyles.sub}>
+            Tap to add photos to your playlist
+          </Text>
           <View style={uploadStyles.addBtn}>
             <Text style={{ fontWeight: '800', color: colors.primary2 }}>
               ＋ Add Image

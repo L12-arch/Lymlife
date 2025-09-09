@@ -5,6 +5,8 @@ const homeStyles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#ffffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   welcomeText: {
     fontSize: 40,

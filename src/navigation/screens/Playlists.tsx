@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import PrimaryButton from '../../components/PrimaryButton';
 import StatCard from '../../components/StatCard';
 import Card from '../../components/Card';
@@ -13,6 +15,43 @@ type Props = NativeStackScreenProps<any, 'Playlists'>;
 const Playlists = ({ navigation }: Props) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const totalImages = playlists.reduce((a, p) => a + p.images.length, 0);
+  const totalSongs = playlists.reduce((a, p) => a + (p.songs?.length || 0), 0);
+
+  const loadPlaylists = async () => {
+    try {
+      const storedPlaylists = await AsyncStorage.getItem('playlists');
+      if (storedPlaylists) {
+        let parsedPlaylists = JSON.parse(storedPlaylists);
+
+        parsedPlaylists = parsedPlaylists.map((playlist: Playlist) => {
+          let songs = playlist.songs || [];
+          // If songs is an array containing arrays, flatten it
+          if (
+            Array.isArray(songs) &&
+            songs.length > 0 &&
+            Array.isArray(songs[0])
+          ) {
+            songs = songs.flat();
+          }
+          return {
+            ...playlist,
+            songs,
+          };
+        });
+
+        setPlaylists(parsedPlaylists);
+        console.log('Loaded Playlists:', parsedPlaylists, storedPlaylists);
+      }
+    } catch (error) {
+      console.error('Failed to load playlists:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadPlaylists();
+    }, []),
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -24,6 +63,7 @@ const Playlists = ({ navigation }: Props) => {
         <View style={playlistsStyles.stats}>
           <StatCard label="Total Playlists" value={playlists.length} />
           <StatCard label="Total Images" value={totalImages} />
+          <StatCard label="Total Songs" value={totalSongs} />
         </View>
 
         <Text style={playlistsStyles.h2}>My Playlists</Text>
@@ -56,7 +96,7 @@ const Playlists = ({ navigation }: Props) => {
               key={p.id}
               style={playlistsStyles.item}
               onPress={() =>
-                navigation.navigate('Connect', { playlistId: p.id })
+                navigation.navigate('PlaylistViewer', { playlist: p })
               }
             >
               <View
@@ -72,7 +112,7 @@ const Playlists = ({ navigation }: Props) => {
                   {p.name}
                 </Text>
                 <Text style={{ color: colors.sub, marginTop: 2 }}>
-                  {p.images.length} images
+                  {p.images.length} images, {p.songs?.length || 0} songs
                 </Text>
               </View>
               <Text style={{ color: colors.primary, fontWeight: '700' }}>
@@ -84,6 +124,6 @@ const Playlists = ({ navigation }: Props) => {
       </ScrollView>
     </View>
   );
-}
+};
 
 export default Playlists;

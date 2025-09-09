@@ -1,56 +1,36 @@
-import { Assets as NavigationAssets } from '@react-navigation/elements';
-import { Asset } from 'expo-asset';
-import { createURL } from 'expo-linking';
-import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
+import { Asset } from 'expo-asset';
+import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Assets as NavigationAssets } from '@react-navigation/elements';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { AuthProvider } from './context/AuthContext';
+import { RootStackParamList } from './types/navigation';
 import { HomePage } from './navigation/screens/Home';
 import LoginPage from './navigation/screens/Login';
 import SignupPage from './navigation/screens/Signup';
 import DashboardPage from './navigation/screens/Dashboard';
 import { Profile } from './navigation/screens/Profile';
 import ForgetPasswordPage from './navigation/screens/ForgotPassword';
-import { AuthProvider } from './context/AuthContext';
 import NewPlaylist from './navigation/screens/NewPlaylist';
+import PlaylistViewer from './navigation/screens/PlaylistViewer';
 import EmailSentPage from './navigation/screens/EmailSent';
 import OtpVerificationPage from './navigation/screens/OtpVerification';
 import NewPasswordPage from './navigation/screens/NewPassword';
-import { RootStackParamList } from './types/navigation';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+import { styles } from './styles/App/index.styles';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-// import { RootStackParamList } from './types/naviagtion';
 
 GoogleSignin.configure({
-  webClientId: '640081209561-r46f96s673fos1sbj8a7dcmpm520g3hj.apps.googleusercontent.com', // Replace with your Web Client ID
+  webClientId:
+    '640081209561-r46f96s673fos1sbj8a7dcmpm520g3hj.apps.googleusercontent.com', // Replace with your Web Client ID
   scopes: ['https://www.googleapis.com/auth/drive'], // Request access to Google Drive
 });
-
-const signInWithGoogle = async () => {
-  try {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    const tokens = await GoogleSignin.getTokens();
-    console.log('Access Token:', tokens.accessToken);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchDriveFiles = async (accessToken: string) => {
-    try {
-      const response = await fetch('https://www.googleapis.com/drive/v3/files', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await response.json();
-      console.log('Drive Files:', data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-// const Stack = createNativeStackNavigator();
 
 Asset.loadAsync([
   ...NavigationAssets,
@@ -62,37 +42,43 @@ SplashScreen.preventAutoHideAsync();
 
 export function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomePage} />
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Signup" component={SignupPage} />
-          <Stack.Screen name="Dashboard" component={DashboardPage} />
-          <Stack.Screen name="Profile" component={Profile} />
-           <Stack.Screen name="NewPlaylist" component={NewPlaylist} />
-            <Stack.Screen
-            name="EmailSent"
-            component={EmailSentPage}
-            options={{ title: 'Email Sent' }}
-          />
-          <Stack.Screen
-            name="ForgetPassword"
-            component={ForgetPasswordPage} // Placeholder for ForgetPassword screen
-            options={{ title: 'Forget Password' }}
-          />
-          <Stack.Screen
-            name="OtpVerification"
-            component={OtpVerificationPage}
-            options={{ title: 'Verify OTP' }}
-          />
-          <Stack.Screen
-            name="NewPassword"
-            component={NewPasswordPage}
-            options={{ title: 'Set New Password' }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthProvider>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={styles.gestureContainer}>
+        <AuthProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" component={HomePage} />
+              <Stack.Screen name="Login" component={LoginPage} />
+              <Stack.Screen name="Signup" component={SignupPage} />
+              <Stack.Screen name="Dashboard" component={DashboardPage} />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="NewPlaylist" component={NewPlaylist} />
+              <Stack.Screen name="PlaylistViewer" component={PlaylistViewer} />
+              {/* <Stack.Screen name="Connect" component={Connect} /> */}
+              <Stack.Screen
+                name="EmailSent"
+                component={EmailSentPage}
+                options={{ title: 'Email Sent' }}
+              />
+              <Stack.Screen
+                name="ForgetPassword"
+                component={ForgetPasswordPage} // Placeholder for ForgetPassword screen
+                options={{ title: 'Forget Password' }}
+              />
+              <Stack.Screen
+                name="OtpVerification"
+                component={OtpVerificationPage}
+                options={{ title: 'Verify OTP' }}
+              />
+              <Stack.Screen
+                name="NewPassword"
+                component={NewPasswordPage}
+                options={{ title: 'Set New Password' }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AuthProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

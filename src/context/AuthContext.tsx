@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Define the shape of the AuthContext
 interface AuthContextType {
   isAuthenticated: boolean;
   userData: any | null;
@@ -15,13 +16,20 @@ interface AuthContextType {
   loading: boolean;
 }
 
+// Create the AuthContext with default undefined value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Props for AuthProvider
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+/**
+ * AuthProvider Component
+ * @param children
+ * @returns Provides authentication context to its children.
+ */
+export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const checkAuthStatus = async () => {
+  async function checkAuthStatus() {
     try {
       const storedEmail = await AsyncStorage.getItem('id');
       const storedUserData = await AsyncStorage.getItem('userData');
@@ -44,9 +52,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const login = async (userData: any) => {
+  async function login(userData: any) {
     try {
       setIsAuthenticated(true);
       setUserData(userData);
@@ -56,9 +64,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Login error:', error);
       throw error;
     }
-  };
+  }
 
-  const logout = async () => {
+  async function logout() {
     try {
       setIsAuthenticated(false);
       setUserData(null);
@@ -69,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Logout error:', error);
       throw error;
     }
-  };
+  }
 
   return (
     <AuthContext.Provider
@@ -78,12 +86,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+/**
+ * useAuth Hook
+ * @returns Custom hook to access authentication context.
+ */
+export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
+}

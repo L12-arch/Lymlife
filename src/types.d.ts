@@ -1,3 +1,5 @@
+import { VideoProps } from './types';
+
 declare module '*.png' {
   const value: import('react-native').ImageSourcePropType;
   export default value;
@@ -59,6 +61,7 @@ export type Playlist = {
   id: string;
   name: string;
   images: string[]; // local URIs
+  songs: VideoProps[]; // songs from Google Drive
 };
 
 export type Device = {
@@ -68,3 +71,4 @@ export type Device = {
   strength: number; // 0..100
   online: boolean;
 };
+

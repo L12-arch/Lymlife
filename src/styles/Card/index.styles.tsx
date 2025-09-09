@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 import { colors, radius, shadow } from '../../theme';
 
 const cardStyles = StyleSheet.create({
-  card: {
+  cardWrapper: {
     backgroundColor: 'white',
     borderRadius: radius.lg,
     padding: 16,
