@@ -17,6 +17,7 @@
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#ffffff"
       },
+       "googleServicesFile": "./android/app/google-services.json",
       "package": "com.lymlife"
     },
     "web": {
@@ -31,7 +32,8 @@
           "image": "./src/assets/logo.png"
         }
       ],
-      "react-native-edge-to-edge"
+      "react-native-edge-to-edge",
+      "@react-native-google-signin/google-signin"
     ],
     "extra": {
       "eas": {

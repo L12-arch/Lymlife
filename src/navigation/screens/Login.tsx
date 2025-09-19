@@ -8,6 +8,12 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
 
 import { login } from '../../api/auth'; // API call for login
 import { useAuth } from '../../context/AuthContext'; // Auth context
@@ -28,6 +34,10 @@ const LoginPage = () => {
   const navigation = useNavigation<any>(); // Navigation instance
   const { login: authLogin } = useAuth(); // Login method from auth context
 
+  GoogleSignin.configure({
+    webClientId:
+      '508092075320-u1383gtebg3fuj4bgtea40snu7vhoc81.apps.googleusercontent.com',
+  });
   /**
    * Handles login logic:
    * - Validates inputs
@@ -52,6 +62,35 @@ const LoginPage = () => {
       Alert.alert('Login Failed', res.message || 'Something went wrong');
     }
   };
+
+  async function onGoogleButtonPress() {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const signInResult: any = await GoogleSignin.signIn();
+
+    // Try the new style of google-sign in result, from v13+ of that module
+    let idToken = signInResult.data?.idToken;
+
+    if (!idToken) {
+      // if you are using older versions of google-signin, try old style result
+      idToken = signInResult.idToken;
+    }
+    if (!idToken) {
+      throw new Error('No ID token found');
+    }
+
+    // Create a Google credential with the token
+    const googleCredential = GoogleAuthProvider.credential(
+      signInResult.data.idToken,
+    );
+
+    Alert.alert('Success', 'Logged in with Google successfully');
+    navigation.navigate('Dashboard');
+
+    // Sign-in the user with the credential
+    return signInWithCredential(getAuth(), googleCredential);
+  }
 
   return (
     <View style={loginStyles.wrapper}>
@@ -110,7 +149,16 @@ const LoginPage = () => {
           source={require('../../assets/google.png')}
           style={loginStyles.google}
         />
-        <Text style={loginStyles.socialText}>LogIn with Google</Text>
+        <Text
+          style={loginStyles.socialText}
+          onPress={() =>
+            onGoogleButtonPress().then(() =>
+              console.log('Signed in with Google!'),
+            )
+          }
+        >
+          LogIn with Google
+        </Text>
       </TouchableOpacity>
     </View>
   );

@@ -153,17 +153,27 @@ const NewPlaylist = ({ navigation }: Props) => {
                 key={song.id}
                 onPress={() => toggleSongSelection(song.id)}
                 style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
                   padding: 10,
-                  backgroundColor: selectedSongs.has(song.id)
-                    ? colors.primary
-                    : colors.bg,
+                  backgroundColor: colors.bg,
                   marginVertical: 4,
                   borderRadius: 6,
                 }}
               >
                 <Text
                   style={{
-                    color: selectedSongs.has(song.id) ? 'white' : colors.text,
+                    fontSize: 18,
+                    marginRight: 10,
+                    color: colors.text,
+                  }}
+                >
+                  {selectedSongs.has(song.id) ? '☑' : '☐'}
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    color: colors.text,
                   }}
                 >
                   {song.title}
