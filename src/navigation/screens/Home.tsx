@@ -29,36 +29,36 @@ export function HomePage() {
   const navigation = useNavigation();
 
   // Shared values for animations
-  const fadeIn = useSharedValue(0);
-  const slideUp = useSharedValue(50);
-  const scaleBtn = useSharedValue(0);
+  const fadeIn = useSharedValue(0); // controls opacity of text
+  const slideUp = useSharedValue(50); // controls vertical position of text
+  const scaleBtn = useSharedValue(0); //controls button scale
   // Background blob animation
-  const moveX = useSharedValue(0);
-  const moveY = useSharedValue(0);
+  const moveX = useSharedValue(0); // controls horizontal position of blobs
+  const moveY = useSharedValue(0); // controls vertical position of blobs
 
   // Text animations (fade + slide up)
   const textStyle = useAnimatedStyle(() => ({
-    opacity: fadeIn.value,
-    transform: [{ translateY: slideUp.value }],
+    opacity: fadeIn.value, // fade in effect
+    transform: [{ translateY: slideUp.value }], // slide up effect
   }));
 
   // Button animations (scale in)
   const buttonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scaleBtn.value }],
+    transform: [{ scale: scaleBtn.value }], // scale effect
   }));
-
+    // Blob animations (move around)
   const blobStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: moveX.value }, { translateY: moveY.value }],
   }));
   useEffect(() => {
-    fadeIn.value = withTiming(1, { duration: 1000 });
+    fadeIn.value = withTiming(1, { duration: 1000 }); // text fade in and slide up
     slideUp.value = withTiming(0, { duration: 1000 });
-    scaleBtn.value = withSpring(1, { damping: 8, stiffness: 100 });
+    scaleBtn.value = withSpring(1, { damping: 8, stiffness: 100 }); // button scale into place
 
-    moveX.value = withRepeat(withTiming(40, { duration: 8000 }), -1, true);
+    moveX.value = withRepeat(withTiming(40, { duration: 8000 }), -1, true); // ping pong animation floating effect
     moveY.value = withRepeat(withTiming(60, { duration: 10000 }), -1, true);
   }, []);
-
+  // Auth context
   const { isAuthenticated, userData } = useAuth();
   console.log('User Data on Home Page:', userData, isAuthenticated);
   return (
@@ -68,9 +68,9 @@ export function HomePage() {
       }}
       style={homeStyles.background}
       blurRadius={6}
-    >
+    > 
       <Animated.View
-        style={[homeStyles.blob, homeStyles.blobBlue, blobStyle]}
+        style={[homeStyles.blob, homeStyles.blobBlue, blobStyle]} // decorative blobs
       />
       <Animated.View
         style={[homeStyles.blob, homeStyles.blobPurple, blobStyle]}

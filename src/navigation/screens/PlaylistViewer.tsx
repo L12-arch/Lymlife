@@ -8,6 +8,7 @@ import GoogleCast, {
   useRemoteMediaClient,
 } from 'react-native-google-cast';
 import { NativeEventEmitter, NativeModules } from 'react-native';
+import io from 'socket.io-client';
 
 import { RootStackParamList } from '../../types/navigation';
 import { styles } from '../../styles/PlaylistViewer/index.styles';
@@ -26,6 +27,7 @@ const PlaylistViewer = ({ navigation, route }: Props) => {
       setCurrentIndex(currentIndex + 1);
     }
   };
+  const socket = io('http://192.168.1.114:8000');
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
@@ -34,20 +36,23 @@ const PlaylistViewer = ({ navigation, route }: Props) => {
   };
 
   const startCasting = async () => {
-    if (!currentVideo || !client) return;
-
-    client.loadMedia({
-      mediaInfo: {
-        contentUrl: currentVideo.webContentLink,
-        metadata: {
-          type: 'generic', // ✅ required field
-          images: [{ url: currentVideo.thumbnailLink }],
-          title: currentVideo.title,
-          subtitle: currentVideo.category,
-        },
-        streamDuration: Number(currentVideo.duration) || 0,
-        contentType: 'video/mp4',
-      },
+    // if (!currentVideo || !client) return;
+    // client.loadMedia({
+    //   mediaInfo: {
+    //     contentUrl: currentVideo.webContentLink,
+    //     metadata: {
+    //       type: 'generic', // ✅ required field
+    //       images: [{ url: currentVideo.thumbnailLink }],
+    //       title: currentVideo.title,
+    //       subtitle: currentVideo.category,
+    //     },
+    //     streamDuration: Number(currentVideo.duration) || 0,
+    //     contentType: 'video/mp4',
+    //   },
+    // });
+    socket.emit('playVideo', {
+      url: currentVideo.webContentLink,
+      title: 'Sample Video',
     });
   };
 
